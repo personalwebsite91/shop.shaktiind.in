@@ -661,160 +661,267 @@ setInterval(
     30000
 );
 /* =========================================================
-   PHYLOS HERO — ONE-TIME CINEMATIC INTRO
+   PHYLOS HERO VIDEO
+   Video 1 → Video 2 → repeat
+   Mute when hero is scrolled out of view
+========================================================= */
+/* =========================================================
+   PHYLOS HERO VIDEO — CONTINUOUS PLAY
 
-   Video 1 → Video 2 → Static Image
+   Video 1 → Video 2 → Video 1 → Video 2 → ...
 
-   If user scrolls away:
-   Video stops → Static Image
-
-   Scrolling back NEVER restarts the videos.
+   Desktop + Mobile:
+   - Always muted
+   - Always playing
+   - Scrolling does NOT stop video
+   - Scrolling back does NOT restart video
+   - No static image
 ========================================================= */
 
-const heroSection = document.querySelector(".cinematic-hero");
+document.addEventListener("DOMContentLoaded", () => {
 
-const videoA = document.getElementById("heroVideoA");
-const videoB = document.getElementById("heroVideoB");
+    const videoA = document.getElementById("heroVideoA");
+    const videoB = document.getElementById("heroVideoB");
 
-const staticImage = document.getElementById("heroStaticImage");
-
-if (heroSection && videoA && videoB && staticImage) {
-
-    let currentVideo = 0;
-    let introFinished = false;
+    if (!videoA || !videoB) {
+        console.warn(
+            "Phylos hero: videos not found."
+        );
+        return;
+    }
 
     const videos = [videoA, videoB];
 
-
-    /* -----------------------------------------
-       SHOW STATIC IMAGE
-    ----------------------------------------- */
-
-    function showStaticImage() {
-
-        if (introFinished) return;
-
-        introFinished = true;
-
-        videos.forEach((video) => {
-
-            video.pause();
-            video.muted = true;
-            video.classList.remove("active");
-
-        });
-
-        staticImage.classList.add("visible");
-    }
+    let currentVideo = 0;
 
 
-    /* -----------------------------------------
-       PLAY CURRENT VIDEO
-    ----------------------------------------- */
+    /* =====================================================
+       PREPARE BOTH VIDEOS
+    ===================================================== */
 
-    function playCurrentVideo() {
+    videos.forEach((video) => {
 
-        if (introFinished) return;
+        video.muted = true;
+        video.defaultMuted = true;
 
-        videos.forEach((video, index) => {
+        video.setAttribute("muted", "");
+        video.setAttribute("autoplay", "");
+        video.setAttribute("playsinline", "");
+        video.setAttribute(
+            "webkit-playsinline",
+            ""
+        );
 
-            if (index !== currentVideo) {
+        video.playsInline = true;
 
-                video.pause();
-                video.classList.remove("active");
+        video.loop = false;
+        video.preload = "auto";
+
+    });
+
+
+    /* =====================================================
+       PLAY VIDEO
+    ===================================================== */
+
+    async function playVideo(index) {
+
+        currentVideo = index;
+
+        const activeVideo =
+            videos[currentVideo];
+
+
+        /* Stop the other video */
+
+        videos.forEach(
+            (video, i) => {
+
+                if (i !== currentVideo) {
+
+                    video.pause();
+
+                    video.classList.remove(
+                        "active"
+                    );
+
+                    video.muted = true;
+
+                }
 
             }
+        );
 
-        });
 
-        const activeVideo = videos[currentVideo];
+        /* Activate current video */
 
-        activeVideo.classList.add("active");
+        activeVideo.classList.add(
+            "active"
+        );
 
-        activeVideo.muted = false;
 
-        const playPromise = activeVideo.play();
+        /* Always muted */
 
-        if (playPromise) {
+        activeVideo.muted = true;
+        activeVideo.defaultMuted = true;
 
-            playPromise.catch(() => {
 
-                /*
-                   Browser may block autoplay with sound.
-                   Start muted instead.
-                */
+        try {
+
+            await activeVideo.play();
+
+            console.log(
+                `Phylos: Video ${
+                    currentVideo + 1
+                } playing`
+            );
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                `Phylos: Video ${
+                    currentVideo + 1
+                } could not autoplay.`,
+                error
+            );
+
+
+            /*
+             * Retry after loading the video.
+             */
+
+            try {
+
+                activeVideo.load();
 
                 activeVideo.muted = true;
 
-                activeVideo.play().catch(() => {});
+                await activeVideo.play();
 
-            });
-
-        }
-    }
-
-
-    /* -----------------------------------------
-       VIDEO 1 FINISHED
-       → VIDEO 2
-    ----------------------------------------- */
-
-    videoA.addEventListener("ended", () => {
-
-        if (introFinished) return;
-
-        currentVideo = 1;
-
-        playCurrentVideo();
-
-    });
-
-
-    /* -----------------------------------------
-       VIDEO 2 FINISHED
-       → STATIC IMAGE
-    ----------------------------------------- */
-
-    videoB.addEventListener("ended", () => {
-
-        showStaticImage();
-
-    });
-
-
-    /* -----------------------------------------
-       START INTRO
-    ----------------------------------------- */
-
-    staticImage.classList.remove("visible");
-
-    videoA.classList.add("active");
-
-    playCurrentVideo();
-
-
-    /* -----------------------------------------
-       SCROLL AWAY
-       → STOP FOREVER
-    ----------------------------------------- */
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-
-            const entry = entries[0];
-
-            if (!entry.isIntersecting && !introFinished) {
-
-                showStaticImage();
+                console.log(
+                    `Phylos: Video ${
+                        currentVideo + 1
+                    } playing after retry`
+                );
 
             }
 
-        },
-        {
-            threshold: 0.25
+            catch (retryError) {
+
+                console.error(
+                    `Phylos: Video ${
+                        currentVideo + 1
+                    } failed.`,
+                    retryError
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       VIDEO 1 → VIDEO 2
+    ===================================================== */
+
+    videoA.addEventListener(
+        "ended",
+        () => {
+
+            console.log(
+                "Phylos: Video 1 ended → Video 2"
+            );
+
+            playVideo(1);
+
         }
     );
 
-    observer.observe(heroSection);
 
-}
+    /* =====================================================
+       VIDEO 2 → VIDEO 1
+    ===================================================== */
+
+    videoB.addEventListener(
+        "ended",
+        () => {
+
+            console.log(
+                "Phylos: Video 2 ended → Video 1"
+            );
+
+            playVideo(0);
+
+        }
+    );
+
+
+    /* =====================================================
+       VIDEO LOAD LOGGING
+    ===================================================== */
+
+    videoA.addEventListener(
+        "loadeddata",
+        () => {
+
+            console.log(
+                "Phylos: Video 1 loaded."
+            );
+
+        }
+    );
+
+
+    videoB.addEventListener(
+        "loadeddata",
+        () => {
+
+            console.log(
+                "Phylos: Video 2 loaded."
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       ERROR LOGGING
+    ===================================================== */
+
+    videoA.addEventListener(
+        "error",
+        () => {
+
+            console.error(
+                "Phylos: Video 1 error:",
+                videoA.error
+            );
+
+        }
+    );
+
+
+    videoB.addEventListener(
+        "error",
+        () => {
+
+            console.error(
+                "Phylos: Video 2 error:",
+                videoB.error
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       START VIDEO 1
+    ===================================================== */
+
+    playVideo(0);
+
+});
