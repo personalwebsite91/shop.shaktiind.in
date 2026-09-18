@@ -28,6 +28,67 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
+
+    <style>
+        /* Student rental highlight */
+        .student-rental-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            padding: 42px 48px;
+            border: 1px solid rgba(11, 31, 77, 0.10);
+            border-radius: 24px;
+            background: linear-gradient(135deg, #f7f9fc 0%, #ffffff 100%);
+            box-shadow: 0 18px 50px rgba(11, 31, 77, 0.08);
+        }
+
+        .student-rental-content h2 {
+            margin: 8px 0 10px;
+        }
+
+        .student-rental-price {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 500;
+        }
+
+        .student-rental-price strong {
+            font-size: 1.7rem;
+            font-weight: 800;
+        }
+
+        .student-rental-note {
+            margin: 8px 0 0;
+            opacity: 0.68;
+        }
+
+        /* Feature cards intentionally show feature names only. */
+        .feature-card {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 700px) {
+            .student-rental-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 30px 24px;
+            }
+
+            .student-rental-card .primary-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -176,72 +237,27 @@
                 <div class="feature-grid">
 
                     <article class="feature-card">
-
-                        <div class="feature-icon">
-                            SOS
-                        </div>
-
+                        <div class="feature-icon">SOS</div>
                         <h3>Instant SOS</h3>
-
-                        <p>
-                            Trigger an emergency alert quickly
-                            when you need assistance.
-                        </p>
-
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-icon">
-                            VOICE
-                        </div>
-
+                        <div class="feature-icon">VOICE</div>
                         <h3>ShaktiCode</h3>
-
-                        <p>
-                            Use a voice-triggered safety command
-                            when reaching for your phone isn't practical.
-                        </p>
-
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-icon">
-                            GPS
-                        </div>
-
+                        <div class="feature-icon">GPS</div>
                         <h3>Live Location</h3>
-
-                        <p>
-                            Share your location with trusted people
-                            during an emergency.
-                        </p>
-
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-icon">
-                            ACT
-                        </div>
-
+                        <div class="feature-icon">ACT</div>
                         <h3>Proof of Act</h3>
-
-                        <p>
-                            Designed to preserve relevant audio
-                            around a triggered safety event.
-                        </p>
-
                     </article>
 
                 </div>
-
             </div>
-
         </section>
 
 
@@ -377,6 +393,32 @@
         </section>
 
 
+
+        <!-- =========================
+             STUDENT RENTAL
+        ========================== -->
+
+        <section class="student-rental section">
+            <div class="container">
+                <div class="student-rental-card">
+                    <div class="student-rental-content">
+                        <span class="eyebrow">FOR STUDENTS</span>
+                        <h2>Safety, made accessible.</h2>
+                        <p class="student-rental-price">
+                            Monthly rental plans from <strong>₹299/-</strong>
+                        </p>
+                        <p class="student-rental-note">
+                            A flexible way to experience Phylos without buying it upfront.
+                        </p>
+                    </div>
+
+                    <a href="#early-access" class="primary-button">
+                        Register Interest
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <!-- =========================
              PRICING
         ========================== -->
@@ -394,6 +436,7 @@
                         </span>
 
                         <h2>
+                            Rental is for only 299/- <br>
                             ₹3,599
                             <span>– ₹7,999+</span>
                         </h2>
@@ -617,6 +660,9 @@
                                     Select your expected budget
                                 </option>
 
+                                <option value="Rental 299/-">
+                                    Rental ₹299/- ~ ₹499/-
+                                </option>
                                 <option value="3599-4999">
                                     ₹3,599 – ₹4,999
                                 </option>
@@ -789,4 +835,3 @@
 
 </body>
 </html>
-
