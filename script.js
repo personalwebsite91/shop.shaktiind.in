@@ -1,4 +1,3 @@
-
 /* =========================================================
    PHYLOS — EARLY ACCESS
    Main JavaScript + Supabase
@@ -9,19 +8,11 @@
    1. SUPABASE CONFIGURATION
 ========================================================= */
 
-const SUPABASE_URL = "https://fjhyckdxcddpkcujppid.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqaHlja2R4Y2RkcGtjdWpwcGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDIyNzksImV4cCI6MjEwNTE3ODI3OX0.GUXM78Im6fvf0Y64g44udkHanu5zAEtwZmaoRAdvWGw";
+const SUPABASE_URL =
+    "https://fjhyckdxcddpkcujppid.supabase.co";
 
-/* =========================================================
-   PHYLOS — EARLY ACCESS
-   Main JavaScript + Supabase
-========================================================= */
-
-
-/* =========================================================
-   1. SUPABASE CONFIGURATION
-========================================================= */
-
+const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqaHlja2R4Y2RkcGtjdWpwcGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDIyNzksImV4cCI6MjEwNTE3ODI3OX0.GUXM78Im6fvf0Y64g44udkHanu5zAEtwZmaoRAdvWGw";
 
 
 const supabaseClient =
@@ -69,7 +60,6 @@ function updateBandQuantity() {
     const quantity =
         selected.length;
 
-
     if (bandQuantity) {
 
         bandQuantity.textContent =
@@ -80,7 +70,7 @@ function updateBandQuantity() {
 }
 
 
-/* Listen for every checkbox change */
+/* Listen for checkbox changes */
 
 buyingForCheckboxes.forEach(
     (checkbox) => {
@@ -121,7 +111,7 @@ if (form) {
 
 
             /* ---------------------------------------------
-               Get ALL selected recipients
+               Get selected recipients
             --------------------------------------------- */
 
             const selectedPeople =
@@ -129,7 +119,7 @@ if (form) {
 
 
             /* ---------------------------------------------
-               Automatically calculate quantity
+               Calculate quantity
             --------------------------------------------- */
 
             const quantity =
@@ -306,21 +296,20 @@ if (form) {
                    Success
                 --------------------------------------------- */
 
-               console.log(
-    "Phylos early access submission successful.",
-    lead
-);
+                console.log(
+                    "Phylos early access submission successful.",
+                    lead
+                );
 
 
-/* Update live statistics immediately */
+                /* Update live statistics */
 
-await loadEarlyAccessStats();
-
-
-showSuccess();
+                await loadEarlyAccessStats();
 
 
-  
+                /* Show success */
+
+                showSuccess();
 
 
             } catch (error) {
@@ -350,6 +339,7 @@ showSuccess();
                     );
 
                 }
+
 
             } finally {
 
@@ -478,7 +468,7 @@ if (navbar) {
 
 
 /* =========================================================
-   9. SMOOTH SCROLL
+   9. SMOOTH ANCHOR SCROLL
 ========================================================= */
 
 document
@@ -562,22 +552,7 @@ document
 
 
 /* =========================================================
-   11. PAGE LOAD
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        console.log(
-            "Phylos Early Access website ready."
-        );
-
-    }
-);
-
-/* =========================================================
-   EARLY ACCESS LIVE STATS
+   11. EARLY ACCESS LIVE STATS
 ========================================================= */
 
 const interestedPeople =
@@ -605,6 +580,7 @@ async function loadEarlyAccessStats() {
             );
 
             return;
+
         }
 
 
@@ -613,7 +589,8 @@ async function loadEarlyAccessStats() {
             data.length > 0
         ) {
 
-            const stats = data[0];
+            const stats =
+                data[0];
 
 
             if (interestedPeople) {
@@ -637,6 +614,7 @@ async function loadEarlyAccessStats() {
 
         }
 
+
     } catch (error) {
 
         console.error(
@@ -649,279 +627,435 @@ async function loadEarlyAccessStats() {
 }
 
 
-/* Load when website opens */
+/* Load stats when website opens */
 
 loadEarlyAccessStats();
 
 
-/* Refresh every 30 seconds */
+/* Refresh stats every 30 seconds */
 
 setInterval(
     loadEarlyAccessStats,
     30000
 );
+
+
 /* =========================================================
-   PHYLOS HERO VIDEO
-   Video 1 → Video 2 → repeat
-   Mute when hero is scrolled out of view
+   12. CINEMATIC SCROLL REVEAL
+=========================================================
+
+   SCROLL DOWN:
+   Elements fade + blur + move upward.
+
+   SCROLL UP:
+   Elements reverse smoothly.
+
+   IMPORTANT:
+   Your HTML elements need one of these classes:
+
+   .scroll-reveal
+   .scroll-reveal-card
+   .scroll-stagger
+
 ========================================================= */
-/* =========================================================
-   PHYLOS HERO VIDEO — CONTINUOUS PLAY
-
-   Video 1 → Video 2 → Video 1 → Video 2 → ...
-
-   Desktop + Mobile:
-   - Always muted
-   - Always playing
-   - Scrolling does NOT stop video
-   - Scrolling back does NOT restart video
-   - No static image
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const videoA = document.getElementById("heroVideoA");
-    const videoB = document.getElementById("heroVideoB");
-
-    if (!videoA || !videoB) {
-        console.warn(
-            "Phylos hero: videos not found."
-        );
-        return;
-    }
-
-    const videos = [videoA, videoB];
-
-    let currentVideo = 0;
 
 
-    /* =====================================================
-       PREPARE BOTH VIDEOS
-    ===================================================== */
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    videos.forEach((video) => {
-
-        video.muted = true;
-        video.defaultMuted = true;
-
-        video.setAttribute("muted", "");
-        video.setAttribute("autoplay", "");
-        video.setAttribute("playsinline", "");
-        video.setAttribute(
-            "webkit-playsinline",
-            ""
-        );
-
-        video.playsInline = true;
-
-        video.loop = false;
-        video.preload = "auto";
-
-    });
+        const revealElements =
+            document.querySelectorAll(
+                ".scroll-reveal, .scroll-reveal-card, .scroll-stagger"
+            );
 
 
-    /* =====================================================
-       PLAY VIDEO
-    ===================================================== */
+        if (
+            !revealElements.length
+        ) {
 
-    async function playVideo(index) {
+            return;
 
-        currentVideo = index;
-
-        const activeVideo =
-            videos[currentVideo];
+        }
 
 
-        /* Stop the other video */
+        const observer =
+            new IntersectionObserver(
+                (entries) => {
 
-        videos.forEach(
-            (video, i) => {
+                    entries.forEach(
+                        (entry) => {
 
-                if (i !== currentVideo) {
+                            if (
+                                entry.isIntersecting
+                            ) {
 
-                    video.pause();
+                                /*
+                                 * Element has entered
+                                 * the viewport.
+                                 */
 
-                    video.classList.remove(
-                        "active"
+                                entry.target.classList.add(
+                                    "is-visible"
+                                );
+
+
+                            } else {
+
+                                /*
+                                 * Element has left
+                                 * the viewport.
+                                 *
+                                 * Removing the class is
+                                 * what allows the animation
+                                 * to reverse when the user
+                                 * scrolls back.
+                                 */
+
+                                entry.target.classList.remove(
+                                    "is-visible"
+                                );
+
+                            }
+
+                        }
                     );
 
-                    video.muted = true;
+                },
+                {
+
+                    /*
+                     * How much of the element must
+                     * be visible before triggering.
+                     */
+
+                    threshold: 0.12,
+
+
+                    /*
+                     * Starts the animation slightly
+                     * before the element reaches the
+                     * exact viewport center.
+                     */
+
+                    rootMargin:
+                        "0px 0px -8% 0px"
 
                 }
+            );
+
+
+        revealElements.forEach(
+            (element) => {
+
+                observer.observe(
+                    element
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   13. PHYLOS HERO VIDEO
+   Video 1 → Video 2 → Video 1 → Video 2
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const videoA =
+            document.getElementById(
+                "heroVideoA"
+            );
+
+        const videoB =
+            document.getElementById(
+                "heroVideoB"
+            );
+
+
+        if (
+            !videoA ||
+            !videoB
+        ) {
+
+            console.warn(
+                "Phylos hero: videos not found."
+            );
+
+            return;
+
+        }
+
+
+        const videos =
+            [
+                videoA,
+                videoB
+            ];
+
+
+        let currentVideo = 0;
+
+
+        /* =====================================================
+           PREPARE VIDEOS
+        ===================================================== */
+
+        videos.forEach(
+            (video) => {
+
+                video.muted = true;
+
+                video.defaultMuted = true;
+
+                video.setAttribute(
+                    "muted",
+                    ""
+                );
+
+                video.setAttribute(
+                    "autoplay",
+                    ""
+                );
+
+                video.setAttribute(
+                    "playsinline",
+                    ""
+                );
+
+                video.setAttribute(
+                    "webkit-playsinline",
+                    ""
+                );
+
+                video.playsInline = true;
+
+                video.loop = false;
+
+                video.preload = "auto";
 
             }
         );
 
 
-        /* Activate current video */
+        /* =====================================================
+           PLAY VIDEO
+        ===================================================== */
 
-        activeVideo.classList.add(
-            "active"
-        );
+        async function playVideo(
+            index
+        ) {
+
+            currentVideo =
+                index;
 
 
-        /* Always muted */
+            const activeVideo =
+                videos[
+                    currentVideo
+                ];
 
-        activeVideo.muted = true;
-        activeVideo.defaultMuted = true;
 
+            /* Stop other video */
 
-        try {
+            videos.forEach(
+                (
+                    video,
+                    i
+                ) => {
 
-            await activeVideo.play();
+                    if (
+                        i !== currentVideo
+                    ) {
 
-            console.log(
-                `Phylos: Video ${
-                    currentVideo + 1
-                } playing`
+                        video.pause();
+
+                        video.classList.remove(
+                            "active"
+                        );
+
+                        video.muted = true;
+
+                    }
+
+                }
             );
 
-        }
 
-        catch (error) {
+            /* Activate current video */
 
-            console.warn(
-                `Phylos: Video ${
-                    currentVideo + 1
-                } could not autoplay.`,
-                error
+            activeVideo.classList.add(
+                "active"
             );
 
 
-            /*
-             * Retry after loading the video.
-             */
+            /* Always muted */
+
+            activeVideo.muted = true;
+
+            activeVideo.defaultMuted = true;
+
 
             try {
 
-                activeVideo.load();
-
-                activeVideo.muted = true;
-
                 await activeVideo.play();
+
 
                 console.log(
                     `Phylos: Video ${
                         currentVideo + 1
-                    } playing after retry`
+                    } playing`
                 );
 
-            }
 
-            catch (retryError) {
+            } catch (
+                error
+            ) {
 
-                console.error(
+                console.warn(
                     `Phylos: Video ${
                         currentVideo + 1
-                    } failed.`,
-                    retryError
+                    } could not autoplay.`,
+                    error
                 );
+
+
+                /* Retry */
+
+                try {
+
+                    activeVideo.load();
+
+                    activeVideo.muted = true;
+
+                    await activeVideo.play();
+
+
+                } catch (
+                    retryError
+                ) {
+
+                    console.error(
+                        `Phylos: Video ${
+                            currentVideo + 1
+                        } failed.`,
+                        retryError
+                    );
+
+                }
 
             }
 
         }
 
+
+        /* =====================================================
+           VIDEO 1 → VIDEO 2
+        ===================================================== */
+
+        videoA.addEventListener(
+            "ended",
+            () => {
+
+                playVideo(1);
+
+            }
+        );
+
+
+        /* =====================================================
+           VIDEO 2 → VIDEO 1
+        ===================================================== */
+
+        videoB.addEventListener(
+            "ended",
+            () => {
+
+                playVideo(0);
+
+            }
+        );
+
+
+        /* =====================================================
+           VIDEO LOGGING
+        ===================================================== */
+
+        videoA.addEventListener(
+            "loadeddata",
+            () => {
+
+                console.log(
+                    "Phylos: Video 1 loaded."
+                );
+
+            }
+        );
+
+
+        videoB.addEventListener(
+            "loadeddata",
+            () => {
+
+                console.log(
+                    "Phylos: Video 2 loaded."
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           VIDEO ERROR LOGGING
+        ===================================================== */
+
+        videoA.addEventListener(
+            "error",
+            () => {
+
+                console.error(
+                    "Phylos: Video 1 error:",
+                    videoA.error
+                );
+
+            }
+        );
+
+
+        videoB.addEventListener(
+            "error",
+            () => {
+
+                console.error(
+                    "Phylos: Video 2 error:",
+                    videoB.error
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           START VIDEO 1
+        ===================================================== */
+
+        playVideo(0);
+
     }
+);
 
 
-    /* =====================================================
-       VIDEO 1 → VIDEO 2
-    ===================================================== */
+/* =========================================================
+   14. PAGE READY
+========================================================= */
 
-    videoA.addEventListener(
-        "ended",
-        () => {
+console.log(
+    "Phylos Early Access website ready."
+);
 
-            console.log(
-                "Phylos: Video 1 ended → Video 2"
-            );
-
-            playVideo(1);
-
-        }
-    );
-
-
-    /* =====================================================
-       VIDEO 2 → VIDEO 1
-    ===================================================== */
-
-    videoB.addEventListener(
-        "ended",
-        () => {
-
-            console.log(
-                "Phylos: Video 2 ended → Video 1"
-            );
-
-            playVideo(0);
-
-        }
-    );
-
-
-    /* =====================================================
-       VIDEO LOAD LOGGING
-    ===================================================== */
-
-    videoA.addEventListener(
-        "loadeddata",
-        () => {
-
-            console.log(
-                "Phylos: Video 1 loaded."
-            );
-
-        }
-    );
-
-
-    videoB.addEventListener(
-        "loadeddata",
-        () => {
-
-            console.log(
-                "Phylos: Video 2 loaded."
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       ERROR LOGGING
-    ===================================================== */
-
-    videoA.addEventListener(
-        "error",
-        () => {
-
-            console.error(
-                "Phylos: Video 1 error:",
-                videoA.error
-            );
-
-        }
-    );
-
-
-    videoB.addEventListener(
-        "error",
-        () => {
-
-            console.error(
-                "Phylos: Video 2 error:",
-                videoB.error
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       START VIDEO 1
-    ===================================================== */
-
-    playVideo(0);
-
-});
